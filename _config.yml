@@ -118,7 +118,7 @@ comments:
     mapping: pathname # optional, default to 'pathname'
     strict: 0 # optional, default to '0'
     input_position: top # optional, default to 'bottom'
-    theme: preferred_color_scheme
+    theme: light
     lang: ko # optional, default to the value of `site.lang`
     reactions_enabled: 1 # optional, default to the value of `1`
 
