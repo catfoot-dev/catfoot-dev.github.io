@@ -1,7 +1,7 @@
 ---
 # the default layout is 'page'
 icon: fas fa-info-circle
-order: 4
+order: 6
 ---
 
 ### 냐 혼자 개발하는 냥발자입니다.
