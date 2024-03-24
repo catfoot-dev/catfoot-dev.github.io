@@ -116,11 +116,9 @@ comments:
     category_id: DIC_kwDOLks-784CeMhZ
     mapping: pathname # optional, default to 'pathname'
     strict: 0 # optional, default to '0'
-    emit-metadata: 0
     input_position: top # optional, default to 'bottom'
     theme: preferred_color_scheme
     lang: ko # optional, default to the value of `site.lang`
-    loading: lazy
     reactions_enabled: 1 # optional, default to the value of `1`
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
