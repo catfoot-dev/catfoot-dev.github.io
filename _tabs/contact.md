@@ -1,7 +1,7 @@
 ---
 # the default layout is 'page'
 icon: fas fa-info-circle
-order: 6
+order: 3
 title: 연락하기
 ---
 ### 반갑습니다

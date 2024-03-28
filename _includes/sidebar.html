@@ -28,8 +28,24 @@
         </a>
       </li>
       <!-- the real tabs -->
+      {%- assign child_path = page.url | split: '/' -%}
+      {%- assign selected_parent_order = 0 -%}
       {% for tab in site.tabs %}
-        <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
+        {%- assign parent_order = tab.order | floor -%}
+        {%- assign visibility = "" -%}
+        {% if tab.order == parent_order %}
+          {% for child in tab.children %}
+            {% if tab.url == page.url or child_path[1] == child %}
+              {%- assign selected_parent_order = parent_order -%}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {%- assign visibility = " nav-subitem unloaded" -%}
+          {% if selected_parent_order == parent_order %}
+            {%- assign visibility = " nav-subitem loaded" -%}
+          {% endif %}
+        {% endif %}
+        <li class="nav-item{{ visibility }}{% if tab.url == page.url %}{{ " active" }}{% endif %}">
           <a href="{{ tab.url | relative_url }}" class="nav-link">
             <i class="fa-fw {{ tab.icon }}"></i>
             {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
@@ -41,6 +57,21 @@
       {% endfor %}
     </ul>
   </nav>
+
+  <div class="sidebar-cat-paw">
+    {% for i in (1..9) %}
+      <svg version="1.1" class="cat-paw" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 32 32" xml:space="preserve">
+        <ellipse style="fill:#ffc7cc;stroke:#ffc7cc;stroke-width:1;stroke-miterlimit:10;" cx="12.5" cy="9.5" rx="2.5" ry="3.5"/>
+        <ellipse style="fill:#ffc7cc;stroke:#ffc7cc;stroke-width:1;stroke-miterlimit:10;" cx="19.5" cy="9.5" rx="2.5" ry="3.5"/>
+        <ellipse style="fill:#ffc7cc;stroke:#ffc7cc;stroke-width:1;stroke-miterlimit:10;" cx="7.5" cy="16.5" rx="2.5" ry="3.5"/>
+        <ellipse style="fill:#ffc7cc;stroke:#ffc7cc;stroke-width:1;stroke-miterlimit:10;" cx="24.5" cy="16.5" rx="2.5" ry="3.5"/>
+        <path style="fill:#ffc7cc;stroke:#ffc7cc;stroke-width:1;stroke-miterlimit:10;" d="M19,20c-0.966-0.966-1-3-3-3s-2,2-3,3
+          s-4,1.069-4,3.5c0,1.381,1.119,2.5,2.5,2.5c1.157,0,3.684-1,4.5-1s3.343,1,4.5,1c1.381,0,2.5-1.119,2.5-2.5
+          C23,21.207,19.966,20.966,19,20z"/>
+      </svg>
+    {% endfor %}
+  </div>
 
   <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
     {% unless site.theme_mode %}

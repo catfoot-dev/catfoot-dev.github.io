@@ -813,6 +813,10 @@ $btn-mb: 0.5rem;
         }
       }
 
+      &.nav-subitem {
+        margin-left: 1rem;
+      }
+
       &.active {
         .nav-link {
           color: var(--sidebar-active-color);
@@ -826,6 +830,82 @@ $btn-mb: 0.5rem;
 
       &:not(:first-child) {
         margin-top: 0.25rem;
+      }
+    }
+  }
+
+  .sidebar-cat-paw {
+    position: relative;
+    width: 100%;
+    z-index: 0;
+
+    .cat-paw {
+      position: absolute;
+      margin-bottom: 10px;
+      width: 25px;
+      transform: rotate(56deg);
+      opacity: 0;
+      pointer-events: none;
+
+      &:nth-child(1) {
+        bottom: 0;
+        left: 0;
+        animation: paw 10s linear .5s infinite;
+      }
+
+      &:nth-child(2) {
+        bottom: 25px;
+        left: 28px;
+        animation: paw 10s linear 1s infinite;
+      }
+
+      &:nth-child(3) {
+        bottom: 50px;
+        left: 70px;
+        animation: paw 10s linear 1.5s infinite;
+      }
+
+      &:nth-child(4) {
+        bottom: 75px;
+        left: 98px;
+        animation: paw 10s linear 2s infinite;
+      }
+
+      &:nth-child(5) {
+        bottom: 100px;
+        left: 140px;
+        animation: paw 10s linear 2.5s infinite;
+      }
+
+      &:nth-child(6) {
+        bottom: 125px;
+        left: 168px;
+        animation: paw 10s linear 3s infinite;
+      }
+
+      &:nth-child(7) {
+        bottom: 150px;
+        left: 210px;
+        animation: paw 10s linear 3.5s infinite;
+      }
+
+      &:nth-child(8) {
+        bottom: 175px;
+        left: 238px;
+        animation: paw 10s linear 4s infinite;
+      }
+
+      &:nth-child(9) {
+        bottom: 200px;
+        left: 280px;
+        animation: paw 10s linear 4.5s infinite;
+      }
+
+      @keyframes paw {
+        0% { opacity: 0; }
+        5% { opacity: 1; }
+        15% { opacity: 1; }
+        20% { opacity: 0; }
       }
     }
   }

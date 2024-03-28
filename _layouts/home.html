@@ -5,13 +5,19 @@ refactor: true
 
 {% include lang.html %}
 
+<h1 class="ps-lg-2">
+  프로젝트
+</h1>
+
+<div id="project-list" class="flex-grow-1 px-xl-1">
+</div>
+
 {% assign pinned = site.posts | where: 'pin', 'true' %}
 {% assign default = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
 
 {% assign posts = '' | split: '' %}
 
 <!-- Get pinned posts -->
-
 {% assign offset = paginator.page | minus: 1 | times: paginator.per_page %}
 {% assign pinned_num = pinned.size | minus: offset %}
 
@@ -39,6 +45,10 @@ refactor: true
     {% assign posts = posts | push: default[i] %}
   {% endfor %}
 {% endif %}
+
+<h1 class="ps-lg-2">
+  블로그
+</h1>
 
 <div id="post-list" class="flex-grow-1 px-xl-1">
   {% for post in posts %}
