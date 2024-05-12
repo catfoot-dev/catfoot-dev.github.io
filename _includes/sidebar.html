@@ -51,6 +51,10 @@
             {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
 
             <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
+
+            {% if tab.children %}
+              <i class="fa-solid fa-caret-down"></i>
+            {% endif %}
           </a>
         </li>
         <!-- .nav-item -->

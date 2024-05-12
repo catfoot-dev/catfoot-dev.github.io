@@ -847,58 +847,18 @@ $btn-mb: 0.5rem;
       opacity: 0;
       pointer-events: none;
 
-      &:nth-child(1) {
-        bottom: 0;
-        left: 0;
-        animation: paw 10s linear .5s infinite;
-      }
+      @for $i from 0 to 5 {
+        &:nth-child(#{$i * 2 + 1}) {
+          bottom: #{($i * 2) * 25}px;
+          left: #{$i * 70}px;
+          animation: paw 10s linear #{$i + 0.5}s infinite;
+        }
 
-      &:nth-child(2) {
-        bottom: 25px;
-        left: 28px;
-        animation: paw 10s linear 1s infinite;
-      }
-
-      &:nth-child(3) {
-        bottom: 50px;
-        left: 70px;
-        animation: paw 10s linear 1.5s infinite;
-      }
-
-      &:nth-child(4) {
-        bottom: 75px;
-        left: 98px;
-        animation: paw 10s linear 2s infinite;
-      }
-
-      &:nth-child(5) {
-        bottom: 100px;
-        left: 140px;
-        animation: paw 10s linear 2.5s infinite;
-      }
-
-      &:nth-child(6) {
-        bottom: 125px;
-        left: 168px;
-        animation: paw 10s linear 3s infinite;
-      }
-
-      &:nth-child(7) {
-        bottom: 150px;
-        left: 210px;
-        animation: paw 10s linear 3.5s infinite;
-      }
-
-      &:nth-child(8) {
-        bottom: 175px;
-        left: 238px;
-        animation: paw 10s linear 4s infinite;
-      }
-
-      &:nth-child(9) {
-        bottom: 200px;
-        left: 280px;
-        animation: paw 10s linear 4.5s infinite;
+        &:nth-child(#{$i * 2 + 2}) {
+          bottom: #{($i * 2 + 1) * 25}px;
+          left: #{$i * 70 + 28}px;
+          animation: paw 10s linear #{$i + 1}s infinite;
+        }
       }
 
       @keyframes paw {

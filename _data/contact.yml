@@ -1,8 +1,5 @@
 #  The contact options.
 
-- type: github
-  icon: "fab fa-github"
-
 - type: youtube
   icon: "fa-brands fa-youtube"
   url: "https://youtube.com/@catfoot-dev"
@@ -13,6 +10,9 @@
 - type: instagram
   icon: "fa-brands fa-instagram"
   url: "https://www.instagram.com/catfoot.dev/"
+
+- type: github
+  icon: "fab fa-github"
 
 - type: email
   icon: "fas fa-envelope"
