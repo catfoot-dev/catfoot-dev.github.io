@@ -51,11 +51,13 @@
             {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
 
             <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
-
-            {% if tab.children %}
-              <i class="fa-solid fa-caret-down"></i>
-            {% endif %}
           </a>
+          {% if tab.children %}
+            <label class="flip">
+              <input type="checkbox" />
+              <i class="fa-solid fa-caret-down"></i>
+            </label>
+          {% endif %}
         </li>
         <!-- .nav-item -->
       {% endfor %}

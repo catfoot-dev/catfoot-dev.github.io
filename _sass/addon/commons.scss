@@ -785,6 +785,10 @@ $btn-mb: 0.5rem;
 
     li.nav-item {
       opacity: 0.9;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 0.25rem;
       width: 100%;
       padding-left: 1.5rem;
       padding-right: 1.5rem;
@@ -793,6 +797,7 @@ $btn-mb: 0.5rem;
         @include pt-pb(0.6rem);
 
         display: flex;
+        flex: 1;
         align-items: center;
         border-radius: 0.75rem;
         font-weight: 600;
@@ -810,6 +815,37 @@ $btn-mb: 0.5rem;
         span {
           font-size: 90%;
           letter-spacing: 0.2px;
+        }
+      }
+
+      label.flip {
+        @include pt-pb(0.6rem);
+
+        cursor: pointer;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+
+        &:hover {
+          background-color: var(--sidebar-hover-bg);
+        }
+
+        input[type="checkbox"] {
+          display: none;
+        }
+
+        i {
+          transition: all;
+          transition-timing-function: ease-in-out;
+        }
+
+        input[type="checkbox"]:checked + i {
+          transform: rotate(180);
         }
       }
 
