@@ -9,7 +9,7 @@ project:
   repository: https://github.com/catfoot-dev/ani-timer
   category: ani-timer
   tags: [react,typescript]
-  link: /assets/projects/ani-timer/index.html
+  _link: /assets/projects/ani-timer/index.html
 ---
 애니메이션 타이머
 
