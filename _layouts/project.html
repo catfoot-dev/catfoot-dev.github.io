@@ -1,0 +1,58 @@
+---
+layout: page
+refactor: true
+panel_includes:
+  - toc
+---
+
+{% include lang.html %}
+
+{% assign tab_key = page.title | downcase %}
+{% assign title = site.data.locales[lang].tabs[tab_key] | default: page.title %}
+{% capture page_name %}{{ page.url | split: '/' }}{% endcapture %}
+
+<article class="p-0" id="project">
+  <div class="d-flex flex-row shadow rounded overflow-hidden">
+    <div class="logo col-md-3">
+      <img src="{{ page.project.logo }}" alt="{{ page_name }}">
+    </div>
+
+    <div class="info position-relative col-md-9">
+      <p>{{ page.project.description }}</p>
+
+      <div class="d-flex justify-content-start">
+        <div class="tags">
+          {% for tag in page.project.tags %}
+            <a class="" href="/tags/{{ tag }}/">
+              #{{tag}}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <div class="links">
+          <a href="{{ page.project.repository }}" target="_blank">
+            <i class="fab fa-github"></i>
+            GitHub
+          </a>
+          <a class="outline-primary" href="/categories/{{ page.project.category }}/">
+            <i class="fa-solid fa-blog"></i>
+            Posts
+          </a>
+        </div>
+      </div>
+
+      {% if page.project.link %}
+        <a id="run" class="btn btn-success shadow-sm" href="{{ page.project.link }}" target="_blank">
+          <i class="fa-solid fa-play"></i>
+          Run
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="content">
+    {{ content }}
+  </div>
+</article>

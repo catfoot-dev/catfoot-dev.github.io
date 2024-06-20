@@ -12,6 +12,10 @@ tabs:
   # format: <filename_without_extension>: <value>
   home: Home
   projects: Projects
+  gadedash: GadeDash
+  ani-timer: Ani Timer
+  yaongware: YaongWare
+  omok: Omok
   blog: Blog
   categories: Categories
   tags: Tags

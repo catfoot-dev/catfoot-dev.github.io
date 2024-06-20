@@ -8,7 +8,7 @@
     <nav id="breadcrumb" aria-label="Breadcrumb">
       {% assign paths = page.url | split: '/' %}
 
-      {% if paths.size == 0 or page.layout == 'home' %}
+      {% if paths.size == 0 %}
         <!-- index page -->
         <span>{{ site.data.locales[include.lang].tabs.home | capitalize }}</span>
 
@@ -24,8 +24,10 @@
           {% elsif forloop.last %}
             {% if page.collection == 'tabs' %}
               <span>{{ site.data.locales[include.lang].tabs[item] | default: page.title }}</span>
+            {% elsif (paths | compact | first) == 'blog' %}
+              <span>Blog</span>
             {% else %}
-              <span>{{ page.title }}</span>
+              <span>{{paths}}{{ page.title }}</span>
             {% endif %}
 
           {% elsif page.layout == 'category' or page.layout == 'tag' %}
@@ -47,7 +49,7 @@
     <div id="topbar-title">
       {% if page.layout == 'home' %}
         {{- site.data.locales[include.lang].title | default: site.title -}}
-      {% elsif page.collection == 'tabs' or page.layout == 'page' %}
+      {% elsif page.collection == 'tabs' or page.layout == 'project' or page.layout == 'page' %}
         {%- capture tab_key -%}{{ page.url | split: '/' }}{%- endcapture -%}
         {{- site.data.locales[include.lang].tabs[tab_key] | default: page.title -}}
       {% else %}

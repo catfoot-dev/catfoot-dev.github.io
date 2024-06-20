@@ -1,10 +1,13 @@
 /*
   Style for Homepage
 */
+.title-more {
+  float: right;
+  margin-top:22px;
+  font-size: 14px;
+}
 
 #post-list {
-  margin-top: 2rem;
-
   .card-wrapper {
     &:hover {
       text-decoration: none;
@@ -106,6 +109,7 @@
 
     &.active {
       .page-link {
+        color: #fff;
         background-color: var(--btn-paginator-hover-color);
       }
     }
@@ -168,10 +172,6 @@
 
 /* Sidebar is visible */
 @media all and (min-width: 831px) {
-  #post-list {
-    margin-top: 2.5rem;
-  }
-
   .pagination {
     font-size: 0.85rem;
     justify-content: center;
