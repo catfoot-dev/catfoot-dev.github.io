@@ -9,7 +9,7 @@ project:
   repository: https://github.com/catfoot-dev/ani-timer
   category: ani-timer
   tags: [react,typescript]
-  link: /assets/projects/ani-timer/index.html
+  link: _/assets/projects/ani-timer/index.html
 ---
 애니메이션 타이머
 
@@ -43,4 +43,4 @@ npm start
 
 ## 라이센스
 
-이 프로젝트는 MIT 라이센스를 따르고 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 확인하세요.
+이 프로젝트는 MIT 라이센스를 따르고 있습니다. 자세한 내용은 LICENSE 파일을 확인하세요.

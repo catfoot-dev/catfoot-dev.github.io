@@ -9,7 +9,7 @@ project:
   repository: https://github.com/catfoot-dev/omok
   category: omok
   tags: [react,typescript]
-  link: /assets/projects/omok/index.html
+  _link: /assets/projects/omok/index.html
 ---
 오목 게임
 
@@ -35,4 +35,4 @@ $ npm start
 
 ## 라이센스
 
-이 프로젝트는 MIT 라이센스를 따르고 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 확인하세요.
+이 프로젝트는 MIT 라이센스를 따르고 있습니다. 자세한 내용은 LICENSE 파일을 확인하세요.
