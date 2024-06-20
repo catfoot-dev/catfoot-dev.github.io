@@ -35,5 +35,4 @@ title: 연락하기
 
 ### 연락방법
 
-- **이메일:** 왼쪽 사이드바 메뉴 아래 이메일 아이콘을 클릭해서 메일을 보내주세요.
-- 다른 연락방법은 현재 받고 있지 않습니다.
+- **이메일:** <a href="javascript:location.href = 'mai' + 'lto:' + ['contact','catfoot.dev'].join('@')">contact<i class="fa-solid fa-at"></i>catfoot.dev</a>

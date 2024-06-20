@@ -2,6 +2,32 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 300 300"
+      class="gradient"
+    >
+      <defs>
+        <linearGradient id="a"
+          x1="13.74" x2="303.96"
+          y1="183.7" y2="45.59"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0" stop-color="#435289"></stop>
+          <stop offset=".6" stop-color="#5163A4"></stop>
+          <stop offset="1" stop-color="#6979B5"></stop>
+        </linearGradient>
+      </defs>
+      <path fill="#6979B5" opacity=".49"
+        d="M0 187.5v25s0 37.5 50 50S300 225 300 225v-37.5Z"></path>
+      <path fill="#6979B5" opacity=".49"
+        d="M300 237.5S287.5 275 250 275s-128.95-37.5-188.6-75 134.21 0 134.21 0Z"></path>
+      <path fill="#6979B5" opacity=".38"
+        d="M0 200v12.5a241.47 241.47 0 0 0 112.5 50c73.6 11.69 130.61-14.86 150-25L300 200Z"></path>
+      <path fill="url(#a)"
+        d="M0 0v212.5s62.5-12.5 150 25 150 0 150 0V0Z"></path>
+    </svg>
+
     <a href="{{ '/' | relative_url }}" id="avatar" class="rounded-circle">
       {%- if site.avatar != empty and site.avatar -%}
         {%- capture avatar_url -%}
@@ -21,7 +47,7 @@
   <nav class="flex-column flex-grow-1 w-100 ps-0">
     <ul class="nav">
       <!-- home -->
-      <li class="nav-item{% if page.layout == 'home' %}{{ " active" }}{% endif %}">
+      <li class="nav-item{% if page.layout == 'home' and page.url == '/' %}{{ " active" }}{% endif %}">
         <a href="{{ '/' | relative_url }}" class="nav-link">
           <i class="fa-fw fas fa-home"></i>
           <span>{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
@@ -29,8 +55,9 @@
       </li>
       <!-- the real tabs -->
       {%- assign child_path = page.url | split: '/' -%}
-      {%- assign selected_parent_order = 0 -%}
+      {%- assign selected_parent_order = tab.order -%}
       {% for tab in site.tabs %}
+        {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
         {%- assign parent_order = tab.order | floor -%}
         {%- assign visibility = "" -%}
         {% if tab.order == parent_order %}
@@ -45,13 +72,38 @@
             {%- assign visibility = " nav-subitem loaded" -%}
           {% endif %}
         {% endif %}
-        <li class="nav-item{{ visibility }}{% if tab.url == page.url %}{{ " active" }}{% endif %}">
+        {% if selected_parent_order != parent_order %}
+          {%- assign selected_parent_order = 0 -%}
+        {% endif %}
+        {%- assign nav_child = "" -%}
+        {% if visibility == "" %}
+          {% capture nav_child %} nav-item-{{tab.order}}{% endcapture %}
+        {% else if tab.order != selected_parent_order %}
+          {% capture nav_child %} nav-item-{{parent_order}}-child{% endcapture %}
+        {% endif %}
+        {%- assign active = "" -%}
+        {% if tab.url == page.url %}
+          {%- assign active = " active" -%}
+        {% elsif (child_path[1] == tab_name) or (tab_name == 'blog' and child_path[1] == 'posts') %}
+          {%- assign active = " active" -%}
+          {%- assign selected_parent_order = parent_order -%}
+        {% endif %}
+        <li class="nav-item{{ visibility }}{{ nav_child }}{{ active }}">
           <a href="{{ tab.url | relative_url }}" class="nav-link">
             <i class="fa-fw {{ tab.icon }}"></i>
-            {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
 
             <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
           </a>
+          {% if tab.children %}
+            <label class="flip{{ nav_child }}">
+              <input
+                type="checkbox"
+                onclick="navItemToggle('{{ nav_child | strip }}')"
+                {% if selected_parent_order != 0 %}{{ 'checked' }}{% endif %}
+              />
+              <i class="fa-solid fa-caret-down"></i>
+            </label>
+          {% endif %}
         </li>
         <!-- .nav-item -->
       {% endfor %}
@@ -73,7 +125,7 @@
     {% endfor %}
   </div>
 
-  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
+  <div class="sidebar-bottom d-flex flex-wrap justify-content-center w-100">
     {% unless site.theme_mode %}
       <button type="button" class="mode-toggle btn" aria-label="Switch Mode">
         <i class="fas fa-adjust"></i>
@@ -84,47 +136,65 @@
       {% endif %}
     {% endunless %}
 
-    {% for entry in site.data.contact %}
-      {% case entry.type %}
-        {% when 'github', 'twitter' %}
-          {%- capture url -%}
-            https://{{ entry.type }}.com/{{ site[entry.type].username }}
-          {%- endcapture -%}
-        {% when 'email' %}
-          {% assign email = site.social.email | split: '@' %}
-          {%- capture url -%}
-            javascript:location.href = 'mai' + 'lto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@')
-          {%- endcapture -%}
-        {% when 'rss' %}
-          {% assign url = '/feed.xml' | relative_url %}
-        {% else %}
-          {% assign url = entry.url %}
-      {% endcase %}
+    <div class="contact-area">
+      {% for entry in site.data.contact %}
+        {% case entry.type %}
+          {% when 'github', 'twitter' %}
+            {%- capture url -%}
+              https://{{ entry.type }}.com/{{ site[entry.type].username }}
+            {%- endcapture -%}
+          {% when 'email' %}
+            {% assign email = site.social.email | split: '@' %}
+            {%- capture url -%}
+              javascript:location.href = 'mai' + 'lto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@')
+            {%- endcapture -%}
+          {% when 'rss' %}
+            {% assign url = '/feed.xml' | relative_url %}
+          {% else %}
+            {% assign url = entry.url %}
+        {% endcase %}
 
-      {% if url %}
-        <a
-          href="{{ url }}"
-          aria-label="{{ entry.type }}"
-          {% assign link_types = '' %}
+        {% if url %}
+          <a
+            href="{{ url }}"
+            aria-label="{{ entry.type }}"
+            {% assign link_types = '' %}
 
-          {% unless entry.noblank %}
-            target="_blank"
-            {% assign link_types = 'noopener noreferrer' %}
-          {% endunless %}
+            {% unless entry.noblank %}
+              target="_blank"
+              {% assign link_types = 'noopener noreferrer' %}
+            {% endunless %}
 
-          {% if entry.type == 'mastodon' %}
-            {% assign link_types = link_types | append: ' me' | strip %}
-          {% endif %}
+            {% if entry.type == 'mastodon' %}
+              {% assign link_types = link_types | append: ' me' | strip %}
+            {% endif %}
 
-          {% unless link_types == empty %}
-            rel="{{ link_types }}"
-          {% endunless %}
-        >
-          <i class="{{ entry.icon }}"></i>
-        </a>
-      {% endif %}
-    {% endfor %}
+            {% unless link_types == empty %}
+              rel="{{ link_types }}"
+            {% endunless %}
+          >
+            <i class="{{ entry.icon }}"></i>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
   <!-- .sidebar-bottom -->
 </aside>
 <!-- #sidebar -->
+
+<script>
+  function navItemToggle(item) {
+    const flip = document.querySelector(`.flip.${item} input[type="checkbox"]`);
+    const children = document.querySelectorAll(`.${item}-child`);
+    for (const item of children) {
+      if (flip.checked) {
+        item.classList.remove('unloaded');
+        item.classList.add('loaded');
+      } else {
+        item.classList.remove('loaded');
+        item.classList.add('unloaded');
+      }
+    }
+  }
+</script>

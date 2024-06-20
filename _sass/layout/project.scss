@@ -1,0 +1,63 @@
+#project {
+  padding: 3rem;
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    background-color: var(--sidebar-bg);
+  }
+
+  .info {
+    padding: 1.5rem;
+
+    p {
+      margin-bottom: 0.1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tags {
+      margin-bottom: 0.5rem;
+
+      a {
+        margin-right: .35rem;
+      }
+    }
+
+    .links {
+
+      a {
+        color: var(--text-muted-color);
+        margin: 0 .35rem .5rem 0;
+        padding: .3rem .5rem;
+        border: 1px solid var(--btn-border-color);
+        border-radius: .8rem;
+        background-color: white;
+        font-size: .85rem;
+        text-decoration: none;
+        line-height: 1.05rem;
+
+        i {
+          margin-right: 3px;
+        }
+      }
+    }
+
+    #run {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+
+      &:hover {
+        color: #ccc !important;
+        border-color: #ccc !important;
+      }
+
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+}

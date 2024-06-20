@@ -1,7 +1,15 @@
 #  The contact options.
 
+- type: rss
+  icon: "fas fa-rss"
+  noblank: true
+
 - type: github
   icon: "fab fa-github"
+
+- type: email
+  icon: "fas fa-envelope"
+  noblank: true # open link in current tab
 
 - type: youtube
   icon: "fa-brands fa-youtube"
@@ -14,13 +22,6 @@
   icon: "fa-brands fa-instagram"
   url: "https://www.instagram.com/catfoot.dev/"
 
-- type: email
-  icon: "fas fa-envelope"
-  noblank: true # open link in current tab
-
-- type: rss
-  icon: "fas fa-rss"
-  noblank: true
 # Uncomment and complete the url below to enable more contact options
 #
 # - type: mastodon

@@ -1,0 +1,39 @@
+---
+layout: default
+refactor: true
+---
+
+{% include lang.html %}
+
+{% if page.layout == 'page' or page.collection == 'tabs' %}
+  {% assign tab_key = page.title | downcase %}
+  {% assign title = site.data.locales[lang].tabs[tab_key] | default: page.title %}
+  <h1 class="dynamic-title ps-lg-2">
+    {{ title }}
+  </h1>
+
+  <div id="project-list" class="row">
+    {% assign project_order = 0 %}
+    {% for tab in site.tabs %}
+      {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+      {% if tab_name == 'projects' %}
+        {% assign project_order = tab.order %}
+      {% endif %}
+      {%- assign parent_order = tab.order | floor -%}
+      {% if tab.order != project_order and project_order == parent_order %}
+        <article class="card-wrapper card col-md-4">
+          <a href="{{ tab.url | relative_url }}" class="project-preview">
+            <img src="{{ tab.project.logo }}" alt="{{ tab_name }}">
+            <div class="card-body">
+              <i class="fa-fw {{ tab.icon }}"></i>
+              <span>{{ tab.title }}</span>
+            </div>
+          </a>
+        </article>
+        <!-- .project-item -->
+      {% endif %}
+    {% endfor %}
+  </div>
+{% else %}
+  {{ content }}
+{% endif %}
