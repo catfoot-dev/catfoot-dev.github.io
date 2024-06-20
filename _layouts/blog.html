@@ -11,7 +11,7 @@ paginate: true
 {% assign page = 1 %}
 {% assign per_page = 5 %}
 {% assign total_pages = site.posts.size | divided_by: 5.0 | ceil %}
-{% assign next_page_path = '/blug/page2/' %}
+{% assign next_page_path = '/blog/page2/' %}
 
 {% if site.posts.size > 0 %}
   {% for i in (0..4) %}
