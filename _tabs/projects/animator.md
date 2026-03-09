@@ -7,7 +7,7 @@ project:
   logo: /assets/img/projects/animator.png
   description: 애니메이터를 위한 애니메이션 제작 도구.
   repository: https://github.com/catfoot-dev/animator
-  category: animator
+  category: Animator
   tags: [react,typescript]
   _link: /assets/projects/animator/index.html
 ---
@@ -43,4 +43,4 @@ npm start
 
 ## 라이센스
 
-이 프로젝트는 MIT 라이센스를 따르고 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 확인하세요.
+이 프로젝트는 MIT 라이센스를 따르고 있습니다. 자세한 내용은 LICENSE 파일을 확인하세요.
