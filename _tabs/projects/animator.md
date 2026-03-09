@@ -7,7 +7,7 @@ project:
   logo: /assets/img/projects/animator.png
   description: 애니메이터를 위한 애니메이션 제작 도구.
   repository: https://github.com/catfoot-dev/animator
-  category: Animator
+  category: animator
   tags: [react,typescript]
   _link: /assets/projects/animator/index.html
 ---
