@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+
+set -eu
+
+TZ_VALUE="Asia/Seoul"
+AUTHOR="catfoot-dev"
+COMMENTS="true"
+IS_DRAFT=true
+PIN=false
+DIRECTORY=""
+TITLE=""
+SLUG=""
+CATEGORIES=""
+TAGS=""
+DESCRIPTION=""
+
+help() {
+  echo "Create a new blog post scaffold"
+  echo
+  echo "Usage:"
+  echo
+  echo "  bash ./tools/new-post [options]"
+  echo
+  echo "Options:"
+  echo '    --title "TEXT"          Post title. Required.'
+  echo '    --categories "A,B"      Comma-separated categories. Required.'
+  echo '    --tags "A,B"            Comma-separated tags. Required.'
+  echo '    --slug "TEXT"           URL/file slug. Optional.'
+  echo '    --description "TEXT"    Post description. Optional.'
+  echo '    --author "ID"           Author id in _data/authors.yml. Default: catfoot-dev.'
+  echo '    --dir "PATH"            Relative directory under _posts for published posts.'
+  echo "    --publish               Create the file in _posts instead of _drafts."
+  echo "    --pin                   Add pin: true."
+  echo "    --no-comments           Set comments: false."
+  echo "    -h, --help              Print this help information."
+}
+
+trim() {
+  printf '%s' "$1" | sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//'
+}
+
+yaml_quote() {
+  local value
+  value=${1//\\/\\\\}
+  value=${value//\"/\\\"}
+  printf '"%s"' "$value"
+}
+
+yaml_array() {
+  local raw=$1
+  local item
+  local output=""
+
+  IFS=',' read -r -a parts <<<"$raw"
+
+  for part in "${parts[@]}"; do
+    item=$(trim "$part")
+
+    if [[ -z $item ]]; then
+      continue
+    fi
+
+    if [[ -n $output ]]; then
+      output="$output, "
+    fi
+
+    output="$output$(yaml_quote "$item")"
+  done
+
+  if [[ -z $output ]]; then
+    echo "[]"
+  else
+    printf '[%s]' "$output"
+  fi
+}
+
+slugify() {
+  local raw=$1
+  local slug
+
+  slug=$(printf '%s' "$raw" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^[:alnum:]]+/-/g;s/^-+//;s/-+$//;s/-+/-/g')
+
+  if [[ -z $slug ]]; then
+    slug="post-$(TZ=$TZ_VALUE date '+%H%M%S')"
+    echo "Info: could not derive an ASCII slug, using '$slug'. Pass --slug for a readable URL." >&2
+  fi
+
+  printf '%s' "$slug"
+}
+
+front_matter_timestamp() {
+  TZ=$TZ_VALUE date '+%Y-%m-%d %H:%M:%S %z' | sed -E 's/([+-][0-9]{2})([0-9]{2})$/\1:\2/'
+}
+
+ensure_safe_dir() {
+  if [[ $DIRECTORY == /* ]] || [[ $DIRECTORY == *".."* ]]; then
+    echo "Error: --dir must stay inside _posts."
+    exit 1
+  fi
+}
+
+main() {
+  while (($#)); do
+    case "$1" in
+    --title)
+      TITLE=$2
+      shift 2
+      ;;
+    --categories)
+      CATEGORIES=$2
+      shift 2
+      ;;
+    --tags)
+      TAGS=$2
+      shift 2
+      ;;
+    --slug)
+      SLUG=$2
+      shift 2
+      ;;
+    --description)
+      DESCRIPTION=$2
+      shift 2
+      ;;
+    --author)
+      AUTHOR=$2
+      shift 2
+      ;;
+    --dir)
+      DIRECTORY=$2
+      shift 2
+      ;;
+    --publish)
+      IS_DRAFT=false
+      shift
+      ;;
+    --pin)
+      PIN=true
+      shift
+      ;;
+    --no-comments)
+      COMMENTS="false"
+      shift
+      ;;
+    -h | --help)
+      help
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo
+      help
+      exit 1
+      ;;
+    esac
+  done
+
+  if [[ -z $TITLE ]] || [[ -z $CATEGORIES ]] || [[ -z $TAGS ]]; then
+    echo "Error: --title, --categories, and --tags are required."
+    echo
+    help
+    exit 1
+  fi
+
+  if [[ -z $SLUG ]]; then
+    SLUG=$(slugify "$TITLE")
+  else
+    SLUG=$(slugify "$SLUG")
+  fi
+
+  local filename
+  local timestamp
+  local front_categories
+  local front_tags
+  local target_dir
+  local target_file
+
+  filename="$(TZ=$TZ_VALUE date '+%Y-%m-%d')-$SLUG.md"
+  timestamp="$(front_matter_timestamp)"
+  front_categories=$(yaml_array "$CATEGORIES")
+  front_tags=$(yaml_array "$TAGS")
+
+  if $IS_DRAFT; then
+    target_dir="_drafts"
+  else
+    if [[ -z $DIRECTORY ]]; then
+      echo "Error: --dir is required when using --publish."
+      exit 1
+    fi
+
+    ensure_safe_dir
+    target_dir="_posts/$DIRECTORY"
+  fi
+
+  mkdir -p "$target_dir"
+  target_file="$target_dir/$filename"
+
+  if [[ -e $target_file ]]; then
+    echo "Error: file already exists: $target_file"
+    exit 1
+  fi
+
+  {
+    echo "---"
+    echo "layout: post"
+    echo "author: $AUTHOR"
+    echo "date: $timestamp"
+    echo "categories: $front_categories"
+    echo "title: $(yaml_quote "$TITLE")"
+    echo "tags: $front_tags"
+    echo "comments: $COMMENTS"
+
+    if [[ -n $DESCRIPTION ]]; then
+      echo "description: $(yaml_quote "$DESCRIPTION")"
+    fi
+
+    if $PIN; then
+      echo "pin: true"
+    fi
+
+    echo "---"
+    echo
+    echo "## 개요"
+    echo
+    echo "## 본문"
+    echo
+    echo "## 마무리"
+  } >"$target_file"
+
+  echo "$target_file"
+}
+
+main "$@"
