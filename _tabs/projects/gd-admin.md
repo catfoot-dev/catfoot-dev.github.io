@@ -4,7 +4,7 @@ icon: fa-solid fa-table
 order: 1.1
 title: GDAdmin
 project:
-  logo: /assets/img/projects/gadedash.png
+  logo: /assets/img/projects/gd-admin.png
   description: GDAdmin - Game Data Administrator. 게임 개발에서 시트로 작성한 데이터를 쉽고 편리하게 검증하고 관리할 수 있는 도구.
   repository: https://github.com/catfoot-dev/gd-admin
   category: GDAdmin

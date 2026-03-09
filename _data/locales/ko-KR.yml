@@ -12,8 +12,8 @@ tabs:
   # format: <filename_without_extension>: <value>
   home: Home
   projects: Projects
-  gadedash: GadeDash
-  ani-timer: Ani Timer
+  gd-admin: GDAdmin
+  animator: Animator
   yaongware: YaongWare
   omok: Omok
   blog: Blog
