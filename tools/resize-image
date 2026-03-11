@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SIZE=256
+OUTPUT=""
+
+help() {
+  echo "Resize an image to a square canvas with white padding."
+  echo
+  echo "Usage:"
+  echo
+  echo "  bash ./tools/resize-image [options] <image>"
+  echo
+  echo "Options:"
+  echo "    --size <px>        Square canvas size. Default: 256"
+  echo "    --output <path>    Output path. Default: overwrite the input file."
+  echo "    -h, --help         Print this help information."
+  echo
+  echo "Behavior:"
+  echo "  - Keeps the original aspect ratio."
+  echo "  - If the image is not square, pads the remaining area with white."
+  echo "  - Saves the result in the same format as the output file extension."
+}
+
+fail() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+main() {
+  local input=""
+
+  while (($#)); do
+    case "$1" in
+    --size)
+      [[ $# -ge 2 ]] || fail "--size requires a value."
+      SIZE=$2
+      shift 2
+      ;;
+    --output)
+      [[ $# -ge 2 ]] || fail "--output requires a value."
+      OUTPUT=$2
+      shift 2
+      ;;
+    -h | --help)
+      help
+      exit 0
+      ;;
+    -*)
+      fail "Unknown option: $1"
+      ;;
+    *)
+      if [[ -n $input ]]; then
+        fail "Only one input image is supported."
+      fi
+      input=$1
+      shift
+      ;;
+    esac
+  done
+
+  [[ -n $input ]] || {
+    help
+    exit 1
+  }
+
+  [[ -f $input ]] || fail "Input file not found: $input"
+  [[ $SIZE =~ ^[0-9]+$ ]] || fail "--size must be a positive integer."
+  [[ $SIZE -gt 0 ]] || fail "--size must be greater than 0."
+
+  if [[ -z $OUTPUT ]]; then
+    OUTPUT=$input
+  fi
+
+  python3 - "$input" "$OUTPUT" "$SIZE" <<'PY'
+from pathlib import Path
+import os
+import sys
+import tempfile
+
+try:
+    from PIL import Image
+except ImportError:
+    print(
+        "Error: Pillow is required. Install it with `python3 -m pip install pillow`.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+input_path = Path(sys.argv[1])
+output_path = Path(sys.argv[2])
+size = int(sys.argv[3])
+
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+with Image.open(input_path) as source:
+    source = source.convert("RGBA")
+    width, height = source.size
+
+    scale = min(size / width, size / height)
+    resized_width = max(1, round(width * scale))
+    resized_height = max(1, round(height * scale))
+    resized = source.resize((resized_width, resized_height), Image.Resampling.LANCZOS)
+
+    canvas = Image.new("RGB", (size, size), (255, 255, 255))
+    x = (size - resized_width) // 2
+    y = (size - resized_height) // 2
+    canvas.paste(resized, (x, y), resized)
+
+    suffix = output_path.suffix.lower()
+    save_kwargs = {}
+    if suffix in {".jpg", ".jpeg"}:
+        save_format = "JPEG"
+        save_kwargs = {"quality": 95, "optimize": True}
+    elif suffix == ".webp":
+        save_format = "WEBP"
+        save_kwargs = {"quality": 95, "method": 6}
+    else:
+        save_format = "PNG"
+        save_kwargs = {"optimize": True}
+
+    if input_path.resolve() == output_path.resolve():
+        with tempfile.NamedTemporaryFile(
+            suffix=output_path.suffix or ".png",
+            dir=str(output_path.parent),
+            delete=False,
+        ) as handle:
+            temp_path = Path(handle.name)
+        try:
+            canvas.save(temp_path, format=save_format, **save_kwargs)
+            os.replace(temp_path, output_path)
+        finally:
+            if temp_path.exists():
+                temp_path.unlink()
+    else:
+        canvas.save(output_path, format=save_format, **save_kwargs)
+
+print(f"{input_path} -> {output_path} ({size}x{size})")
+PY
+}
+
+main "$@"
