@@ -9,7 +9,6 @@ IS_DRAFT=true
 PIN=false
 DIRECTORY=""
 TITLE=""
-SLUG=""
 CATEGORIES=""
 TAGS=""
 DESCRIPTION=""
@@ -25,7 +24,6 @@ help() {
   echo '    --title "TEXT"          Post title. Required.'
   echo '    --categories "A,B"      Comma-separated categories. Required.'
   echo '    --tags "A,B"            Comma-separated tags. Required.'
-  echo '    --slug "TEXT"           URL/file slug. Optional.'
   echo '    --description "TEXT"    Post description. Optional.'
   echo '    --author "ID"           Author id in _data/authors.yml. Default: catfoot-dev.'
   echo '    --dir "PATH"            Relative directory under _posts for published posts.'
@@ -74,24 +72,12 @@ yaml_array() {
   fi
 }
 
-slugify() {
-  local raw=$1
-  local slug
-
-  slug=$(printf '%s' "$raw" \
-    | tr '[:upper:]' '[:lower:]' \
-    | sed -E 's/[^[:alnum:]]+/-/g;s/^-+//;s/-+$//;s/-+/-/g')
-
-  if [[ -z $slug ]]; then
-    slug="post-$(TZ=$TZ_VALUE date '+%H%M%S')"
-    echo "Info: could not derive an ASCII slug, using '$slug'. Pass --slug for a readable URL." >&2
-  fi
-
-  printf '%s' "$slug"
-}
-
 front_matter_timestamp() {
   TZ=$TZ_VALUE date '+%Y-%m-%d %H:%M:%S %z' | sed -E 's/([+-][0-9]{2})([0-9]{2})$/\1:\2/'
+}
+
+build_filename() {
+  TZ=$TZ_VALUE ruby -rdate -e 'now = Time.now; today = now.to_date; epoch = Date.new(1970, 1, 1); print "#{today.strftime("%Y-%m-%d")}-#{(today - epoch).to_i}#{now.strftime("%H")}.md"'
 }
 
 ensure_safe_dir() {
@@ -114,10 +100,6 @@ main() {
       ;;
     --tags)
       TAGS=$2
-      shift 2
-      ;;
-    --slug)
-      SLUG=$2
       shift 2
       ;;
     --description)
@@ -164,12 +146,6 @@ main() {
     exit 1
   fi
 
-  if [[ -z $SLUG ]]; then
-    SLUG=$(slugify "$TITLE")
-  else
-    SLUG=$(slugify "$SLUG")
-  fi
-
   local filename
   local timestamp
   local front_categories
@@ -177,7 +153,7 @@ main() {
   local target_dir
   local target_file
 
-  filename="$(TZ=$TZ_VALUE date '+%Y-%m-%d')-$SLUG.md"
+  filename="$(build_filename)"
   timestamp="$(front_matter_timestamp)"
   front_categories=$(yaml_array "$CATEGORIES")
   front_tags=$(yaml_array "$TAGS")

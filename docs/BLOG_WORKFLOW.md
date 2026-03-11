@@ -83,7 +83,6 @@ bash ./tools/new-post \
   --publish \
   --dir "Programing/github" \
   --title "Jekyll 글 작성 흐름 정리" \
-  --slug "jekyll-writing-workflow" \
   --categories "개발,GitHub Pages" \
   --tags "개발,블로그,Jekyll,GitHub Pages"
 ```
@@ -92,9 +91,10 @@ bash ./tools/new-post \
 
 - 기본값은 `_drafts/` 아래에 초안을 만듭니다.
 - `--publish` 를 주면 `_posts/<dir>/` 아래에 발행 파일을 만듭니다.
-- 파일명은 `YYYY-MM-DD-slug.md` 형식으로 생성합니다.
-- 한글 제목만 쓰는 경우 읽기 좋은 URL 을 위해 `--slug` 를 같이 주는 편이 좋습니다.
-- 기존 숫자형 파일명 포스트는 URL 보존을 위해 그대로 두는 편이 안전합니다.
+- 파일명은 `YYYY-MM-DD-[1970-01-01부터 일 수][시].md` 형식으로 생성합니다.
+- `시` 는 `00`-`23` 형식의 두 자리 24시간 값입니다.
+- 새 규칙은 `_posts` 와 `_drafts` 모두 같은 방식으로 사용합니다.
+- 이미 발행된 글은 파일명을 바꾸면 URL 이 달라질 수 있으므로, 기존 파일은 그대로 두는 편이 안전합니다.
 
 ## 로컬 미리보기와 검증
 
